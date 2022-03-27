@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import * as L from "leaflet";
 // import * as d3 from "d3";
 import { ApixuService } from "../apixu.service";
-import { UserLocationService } from "../user-location.service";
-
 @Component({
   selector: "app-weather",
   templateUrl: "./weather.component.html",
@@ -19,7 +17,6 @@ export class WeatherComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private apixuService: ApixuService,
-    private userLocation: UserLocationService,
   ) { }
 
   watchPosition() {
@@ -27,7 +24,7 @@ export class WeatherComponent implements OnInit {
       console.log(`lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`);
       let myMap = new L.Map('map', {
         center: new L.LatLng(position.coords.latitude, position.coords.longitude),
-        zoom: 12,
+        zoom: 6,
       });
       L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYm9zaGJvc2giLCJhIjoiY2wxOWdnand4MG5oZjNibW05b2ZrYmFsaSJ9.G_ICikMRlp6W3LDz1eysYw`,
         {
@@ -57,12 +54,6 @@ export class WeatherComponent implements OnInit {
     if (!navigator.geolocation) {
       console.log("geolocation is not supported on your device")
     }
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log(`lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`);
-      console.log(`https://www.openstreetmap.org/#map=18/${position.coords.latitude
-        }/${position.coords.longitude}`)
-    })
-
     this.watchPosition();
   }
 
@@ -72,10 +63,5 @@ export class WeatherComponent implements OnInit {
       console.log(data);
       console.log(navigator);
     });
-  }
-
-  sendUserLocation() {
-    this.userLocation.getLocation();
-    console.log(this.userLocation.getLocation.arguments)
   }
 }

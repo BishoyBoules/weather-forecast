@@ -9,7 +9,6 @@ import { allAppRoutes } from "./routes";
 import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { ApixuService } from "./apixu.service";
-import { UserLocationService } from "./user-location.service"
 
 @NgModule({
   declarations: [AppComponent, WeatherComponent],
@@ -20,7 +19,7 @@ import { UserLocationService } from "./user-location.service"
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [UserLocationService, ApixuService],
+  providers: [ApixuService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
