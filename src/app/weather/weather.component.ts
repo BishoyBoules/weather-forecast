@@ -21,7 +21,10 @@ export class WeatherComponent implements OnInit {
 
   watchPosition() {
     navigator.geolocation.watchPosition(position => {
-      console.log(`lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`);
+      let container = L.DomUtil.get('#map');
+      if (container != null) {
+        container = null;
+      }
       let myMap = new L.Map('map', {
         center: new L.LatLng(position.coords.latitude, position.coords.longitude),
         zoom: 6,
@@ -38,7 +41,7 @@ export class WeatherComponent implements OnInit {
       let marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(myMap);
       marker.bindPopup('<b>This is my location</b>').openPopup();
     }, err => {
-      console.log(err);
+      alert(err)
     }, {
       enableHighAccuracy: true,
       timeout: 1000,
