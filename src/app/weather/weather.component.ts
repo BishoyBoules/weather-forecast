@@ -22,8 +22,7 @@ export class WeatherComponent implements OnInit {
 
   watchPosition() {
     navigator.geolocation.watchPosition(position => {
-      let xhr = new XMLHttpRequest()
-      let svg = d3.select('body').append('svg').attr('transform', 'translate(' + 100 + ',' + 100 + ') rotate(-90 0 0)');
+      let xhr = new XMLHttpRequest();
       let myMap = new L.Map('map', {
         center: new L.LatLng(position.coords.latitude, position.coords.longitude),
         zoom: 6,

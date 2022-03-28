@@ -7,3 +7,7 @@
 #myLocation {
     width: 300px;
 }
+
+#mapDisplay {
+    margin-bottom: 100px;
+}
