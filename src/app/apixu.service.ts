@@ -11,6 +11,12 @@ export class ApixuService {
 
   constructor(private http: HttpClient) { }
 
+  getLocalWeather(myLocation: any) {
+    return this.http.get(
+      url + myLocation + key
+    );
+  }
+
   getWeather(location: string) {
     return this.http.get(
       url + location + key

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import * as L from "leaflet";
-// import * as d3 from "d3";
+import * as d3 from "d3";
 import { ApixuService } from "../apixu.service";
 @Component({
   selector: "app-weather",
@@ -11,6 +11,7 @@ import { ApixuService } from "../apixu.service";
 export class WeatherComponent implements OnInit {
   public weatherSearchForm!: FormGroup;
   public weatherData: any;
+  public localWeather: any;
   public myLocation: any;
   public id = "#map";
 
@@ -21,10 +22,8 @@ export class WeatherComponent implements OnInit {
 
   watchPosition() {
     navigator.geolocation.watchPosition(position => {
-      let container = L.DomUtil.get('#map');
-      if (container != null) {
-        container = null;
-      }
+      let xhr = new XMLHttpRequest()
+      let svg = d3.select('body').append('svg').attr('transform', 'translate(' + 100 + ',' + 100 + ') rotate(-90 0 0)');
       let myMap = new L.Map('map', {
         center: new L.LatLng(position.coords.latitude, position.coords.longitude),
         zoom: 6,
@@ -40,14 +39,27 @@ export class WeatherComponent implements OnInit {
         }).addTo(myMap);
       let marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(myMap);
       marker.bindPopup('<b>This is my location</b>').openPopup();
+      xhr.open('GET', "https://us1.locationiq.com/v1/reverse.php?key=pk.04ed26be4e6a8a0aa2c037f64e6d0b22&lat=" +
+        position.coords.latitude + "&lon=" + position.coords.longitude + "&format=json", true);
+      xhr.send();
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+          var city = response.address.city;
+          this.apixuService.getLocalWeather(city).subscribe(data => {
+            this.localWeather = data;
+          });
+          return;
+        }
+      }
+      xhr.addEventListener("readystatechange", xhr.onreadystatechange, false);
     }, err => {
-      alert(err)
+      console.log(err);
     }, {
       enableHighAccuracy: true,
       timeout: 1000,
       maximumAge: 0
     })
-
   }
 
   ngOnInit() {
